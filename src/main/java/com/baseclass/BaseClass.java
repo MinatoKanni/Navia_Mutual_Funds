@@ -1,4 +1,4 @@
-```java
+java
 package com.baseclass;
 
 import java.io.File;
@@ -146,4 +146,4 @@ public class BaseClass {
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }
 }
-```
+
