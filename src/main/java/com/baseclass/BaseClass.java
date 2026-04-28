@@ -1,3 +1,4 @@
+```java
 package com.baseclass;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -17,6 +19,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -24,6 +28,7 @@ public class BaseClass {
 
     public static WebDriver driver;
     public static Actions a;
+    public static WebDriverWait wait;
 
     public static WebDriver launchBrowser(String browser) {
 
@@ -33,13 +38,12 @@ public class BaseClass {
 
             ChromeOptions options = new ChromeOptions();
 
-            // Auto-detect CI/Jenkins environment and run headless
             boolean isCI = System.getenv("CI") != null
                     || System.getenv("JENKINS_HOME") != null
                     || System.getenv("JENKINS_URL") != null;
 
             if (isCI) {
-                System.out.println("[INFO] CI/Jenkins environment detected - launching Chrome in HEADLESS mode.");
+                System.out.println("[INFO] CI/Jenkins detected - HEADLESS mode");
                 options.addArguments("--headless=new");
                 options.addArguments("--no-sandbox");
                 options.addArguments("--disable-dev-shm-usage");
@@ -47,29 +51,52 @@ public class BaseClass {
                 options.addArguments("--window-size=1920,1080");
                 options.addArguments("--remote-allow-origins=*");
             } else {
-                System.out.println("[INFO] Local environment detected - launching Chrome in HEADED mode.");
+                System.out.println("[INFO] Local detected - HEADED mode");
             }
 
             options.addArguments("--disable-notifications");
+
             driver = new ChromeDriver(options);
+            wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+            // Maximize only in local
+            if (!isCI) {
+                driver.manage().window().maximize();
+            }
         }
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.manage().window().maximize();
-
         return driver;
     }
 
     public static void getUrl(String url) {
         driver.get(url);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
     }
 
     public static void clickOnElement(WebElement element) {
-        element.click();
+        try {
+            scrollToElement(element);
+            wait.until(ExpectedConditions.elementToBeClickable(element)).click();
+        } catch (Exception e) {
+            System.out.println("[WARN] Normal click failed, trying JS click...");
+            clickWithJS(element);
+        }
     }
 
     public static void sendValues(WebElement element, String value) {
+        wait.until(ExpectedConditions.visibilityOf(element));
+        element.clear();
         element.sendKeys(value);
+    }
+
+    public static void scrollToElement(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block:'center'});", element);
+    }
+
+    public static void clickWithJS(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
 
     public static void quitBrowser() {
@@ -78,8 +105,6 @@ public class BaseClass {
         }
     }
 
-    // FIX: Timestamp in filename prevents FileAlreadyExistsException
-    // when multiple scenarios share the same name
     public static void takeScreenshot(String name) {
         try {
             TakesScreenshot ts = (TakesScreenshot) driver;
@@ -87,44 +112,38 @@ public class BaseClass {
 
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(new Date());
             String safeName = name.replaceAll("[^a-zA-Z0-9_\\-]", "_");
+
             File dest = new File("target/screenshots/" + safeName + "_" + timestamp + ".png");
 
             Files.createDirectories(dest.getParentFile().toPath());
             Files.copy(src.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
             System.out.println("[SCREENSHOT] Saved: " + dest.getPath());
 
         } catch (IOException e) {
-            System.err.println("[SCREENSHOT ERROR] Failed to save screenshot for: " + name);
+            System.err.println("[ERROR] Screenshot failed: " + name);
             e.printStackTrace();
         }
     }
 
-    public static void framesHandling() throws InterruptedException {
-        Thread.sleep(1000);
-        WebElement frame1 = driver.findElement(By.xpath("//iframe[@class='iframe_window']"));
-        driver.switchTo().frame(frame1);
-        WebElement frame2 = driver.findElement(By.xpath("//iframe[@title='Financial Chart']"));
-        driver.switchTo().frame(frame2);
-        Thread.sleep(1000);
+    public static void framesHandling() {
+        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(
+                By.xpath("//iframe[@class='iframe_window']")));
+
+        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(
+                By.xpath("//iframe[@title='Financial Chart']")));
     }
 
-    public static void outOfFrames() throws InterruptedException {
-        Thread.sleep(1000);
+    public static void outOfFrames() {
         driver.switchTo().defaultContent();
     }
-    
-    public static void sleep(long timeoutInSeconds) throws InterruptedException {
 
-		Thread.sleep(timeoutInSeconds);
-	}
-    
-    public static void setImplicitWait(long timeoutInSeconds) {
-		driver.manage().timeouts().implicitlyWait(timeoutInSeconds, TimeUnit.SECONDS);
-	}
-    
-    
-    
-    
-    
-    
+    public static void sleep(long seconds) throws InterruptedException {
+        Thread.sleep(seconds * 1000); // FIXED
+    }
+
+    public static void setImplicitWait(long seconds) {
+        driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
+    }
 }
+```
