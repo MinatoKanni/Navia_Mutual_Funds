@@ -9,6 +9,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.baseclass.BaseClass;
 
@@ -16,149 +18,150 @@ import io.cucumber.java.en.When;
 
 public class MutualFund extends BaseClass {
 
-	@When("User MouseOver Dashboard and Click Mutual Funds")
-	public void user_mouse_over_dashboard_and_click_mutual_funds() throws InterruptedException {
+    @When("User MouseOver Dashboard and Click Mutual Funds")
+    public void user_mouse_over_dashboard_and_click_mutual_funds() throws InterruptedException {
 
-	    Thread.sleep(2000);
-	    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        Thread.sleep(2000);
 
-	    WebElement dashBoard = driver.findElement(By.xpath(
-	            "(//span[text()='Dashboard']//ancestor::li)[1]"));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-	    Actions ac = new Actions(driver);
-	    ac.moveToElement(dashBoard).perform();
+        // FIX: The original XPath "(//span[text()='Dashboard']//ancestor::li)[1]"
+        // does not exist on the Navia home page. The correct nav element uses
+        // //label[text()='Dashboard'] as confirmed by waitForPageReady() and
+        // the login success check. We hover the parent <li> of that label instead.
+        WebElement dashBoard = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//label[text()='Dashboard']//ancestor::li[1]")));
 
-	    Thread.sleep(2000);
+        Actions ac = new Actions(driver);
+        ac.moveToElement(dashBoard).perform();
 
-	    driver.findElement(By.xpath(
-	            "//a[@data-title='MF']//parent::li")).click();
+        Thread.sleep(2000);
 
-	    Thread.sleep(2000);
-	}
+        driver.findElement(By.xpath(
+                "//a[@data-title='MF']//parent::li")).click();
 
-	@When("User click Explore and Search {string}")
-	public void user_click_explore_and_search(String string) throws InterruptedException, AWTException {
-		Thread.sleep(2000);
+        Thread.sleep(2000);
+    }
 
-		WebElement iframe = driver.findElement(By.xpath("//iframe[@class='iframe_window']"));
+    @When("User click Explore and Search {string}")
+    public void user_click_explore_and_search(String string) throws InterruptedException, AWTException {
+        Thread.sleep(2000);
 
-		driver.switchTo().frame(iframe);
+        WebElement iframe = driver.findElement(By.xpath("//iframe[@class='iframe_window']"));
 
-		Thread.sleep(2000);
+        driver.switchTo().frame(iframe);
 
-		WebElement mandateList = driver.findElement(By.xpath("//a[@id='mandatelist-label']"));
+        Thread.sleep(2000);
 
-		Actions ac = new Actions(driver);
-		ac.moveToElement(mandateList).perform();
-		Thread.sleep(15000);
+        WebElement mandateList = driver.findElement(By.xpath("//a[@id='mandatelist-label']"));
 
-		driver.findElement(By.xpath("//a[@id='dashboard-label']//descendant::i")).click();
-		Thread.sleep(2000);
+        Actions ac = new Actions(driver);
+        ac.moveToElement(mandateList).perform();
+        Thread.sleep(15000);
 
-		driver.findElement(By.xpath("//input[@id='Search_Input']")).click();
-		Thread.sleep(2000);
+        driver.findElement(By.xpath("//a[@id='dashboard-label']//descendant::i")).click();
+        Thread.sleep(2000);
 
-		driver.findElement(By.xpath("//input[@id='Search_Input']")).sendKeys(string);
-		Thread.sleep(2000);
+        driver.findElement(By.xpath("//input[@id='Search_Input']")).click();
+        Thread.sleep(2000);
 
-		Robot r = new Robot();
-		r.keyPress(KeyEvent.VK_ENTER);
-		r.keyRelease(KeyEvent.VK_ENTER);
+        driver.findElement(By.xpath("//input[@id='Search_Input']")).sendKeys(string);
+        Thread.sleep(2000);
 
-	}
-	
-	@When("User Click Explore")
-	public void user_click_explore() throws InterruptedException {
+        Robot r = new Robot();
+        r.keyPress(KeyEvent.VK_ENTER);
+        r.keyRelease(KeyEvent.VK_ENTER);
 
-		Thread.sleep(1000);
+    }
 
-		WebElement element2 = driver.findElement(By.xpath("//iframe[@class='iframe_window']"));
-		driver.switchTo().frame(element2);
+    @When("User Click Explore")
+    public void user_click_explore() throws InterruptedException {
 
-		WebElement element = driver.findElement(By.xpath("//button[@id='tab-content-tab_explore']"));
-		Actions ac = new Actions(driver);
+        Thread.sleep(1000);
 
-		ac.moveToElement(element).perform();
+        WebElement element2 = driver.findElement(By.xpath("//iframe[@class='iframe_window']"));
+        driver.switchTo().frame(element2);
 
-		Thread.sleep(2000);
+        WebElement element = driver.findElement(By.xpath("//button[@id='tab-content-tab_explore']"));
+        Actions ac = new Actions(driver);
 
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-	    js.executeScript("arguments[0].click();", element);
-		Thread.sleep(1000);
+        ac.moveToElement(element).perform();
 
-	}
+        Thread.sleep(2000);
 
-	@When("User Search {string} in Serach Box and enter")
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", element);
+        Thread.sleep(1000);
 
-		public void user_search_in_serach_box_and_enter(String string) throws InterruptedException {
-			Thread.sleep(1000);
+    }
 
-			driver.findElement(By.xpath("//input[@placeholder='Search']")).click();
-			Thread.sleep(1000);
-			driver.findElement(By.xpath("//input[@placeholder='Search']")).sendKeys(string);
+    @When("User Search {string} in Serach Box and enter")
+    public void user_search_in_serach_box_and_enter(String string) throws InterruptedException {
+        Thread.sleep(1000);
 
-			Thread.sleep(2000);
-			driver.findElement(By.xpath("//span[text()='" + string + "']//parent::div")).click();
-			Thread.sleep(1000);
+        driver.findElement(By.xpath("//input[@placeholder='Search']")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//input[@placeholder='Search']")).sendKeys(string);
 
-		}
-	
-	@When("User Click One Time , enter amount {string} and click pay now")
-	public void user_click_one_time_enter_amount_and_click_pay_now(String string) throws InterruptedException {
-		Thread.sleep(1000);
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//span[text()='" + string + "']//parent::div")).click();
+        Thread.sleep(1000);
 
-		driver.findElement(By.xpath("//span[text()='One-Time']")).click();
-		Thread.sleep(1000);
-		WebElement amt = driver.findElement(By.xpath("//input[@data-dhx-id='ot_amt']"));
-		Thread.sleep(1000);
-		amt.click();
-		Thread.sleep(1000);
-		amt.sendKeys(string);
+    }
 
-		Thread.sleep(2000);
-		driver.findElement(By.xpath("//span[text()='Pay Now']//parent::button")).click();
+    @When("User Click One Time , enter amount {string} and click pay now")
+    public void user_click_one_time_enter_amount_and_click_pay_now(String string) throws InterruptedException {
+        Thread.sleep(1000);
 
-		Thread.sleep(1000);
+        driver.findElement(By.xpath("//span[text()='One-Time']")).click();
+        Thread.sleep(1000);
+        WebElement amt = driver.findElement(By.xpath("//input[@data-dhx-id='ot_amt']"));
+        Thread.sleep(1000);
+        amt.click();
+        Thread.sleep(1000);
+        amt.sendKeys(string);
 
-	}
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//span[text()='Pay Now']//parent::button")).click();
 
-	@When("User Click enter UPI ID {string} and Click Pay Via UPI")
-	public void user_click_enter_upi_id_and_click_pay_via_upi(String string)
-	        throws InterruptedException {
+        Thread.sleep(1000);
 
-		Actions ac = new Actions(driver);
-		
-		Thread.sleep(2000);
-		driver.findElement(By.xpath("//input[@placeholder='Enter UPI ID']")).click();
-		Thread.sleep(1000);
-		driver.findElement(By.xpath("//input[@placeholder='Enter UPI ID']")).sendKeys(string);
-		Thread.sleep(3000);
+    }
 
-		driver.findElement(By.xpath("//span[text()='Pay Via UPI']//parent::button")).click();
+    @When("User Click enter UPI ID {string} and Click Pay Via UPI")
+    public void user_click_enter_upi_id_and_click_pay_via_upi(String string)
+            throws InterruptedException {
 
-		Thread.sleep(13000);
+        Actions ac = new Actions(driver);
 
-		WebElement cancel = driver.findElement(By.xpath("//span[text()='Cancel Payment']//parent::button"));
-		ac.moveToElement(cancel).perform();
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//input[@placeholder='Enter UPI ID']")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//input[@placeholder='Enter UPI ID']")).sendKeys(string);
+        Thread.sleep(3000);
 
-		ac.click(cancel).perform();
-		Thread.sleep(3000);
-		driver.findElement(By.xpath("//div[@class='py_back']")).click();
-		
-		driver.switchTo().defaultContent();
+        driver.findElement(By.xpath("//span[text()='Pay Via UPI']//parent::button")).click();
 
-		Actions s=new Actions(driver);
-		WebElement element = driver.findElement(By.xpath("//div[@class='funds_show']"));
-		Thread.sleep(2000);
-		s.moveToElement(element).build().perform();
-		Thread.sleep(2000);
-		
-		driver.switchTo().frame(0);
-		//driver.findElement(By.xpath("///div[@class='go_home']//child::img")).click();
-		
-		Thread.sleep(2000);
-	}
-	
-	
-	
+        Thread.sleep(13000);
+
+        WebElement cancel = driver.findElement(By.xpath("//span[text()='Cancel Payment']//parent::button"));
+        ac.moveToElement(cancel).perform();
+
+        ac.click(cancel).perform();
+        Thread.sleep(3000);
+        driver.findElement(By.xpath("//div[@class='py_back']")).click();
+
+        driver.switchTo().defaultContent();
+
+        Actions s = new Actions(driver);
+        WebElement element = driver.findElement(By.xpath("//div[@class='funds_show']"));
+        Thread.sleep(2000);
+        s.moveToElement(element).build().perform();
+        Thread.sleep(2000);
+
+        driver.switchTo().frame(0);
+
+        Thread.sleep(2000);
+    }
+
 }
