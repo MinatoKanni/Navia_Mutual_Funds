@@ -1,4 +1,3 @@
-```java
 package com.stepdefinition;
 
 import java.time.Duration;
@@ -19,29 +18,31 @@ public class Login_Page extends BaseClass {
     @Given("User Navigate to Navia")
     public void user_navigate_to_navia() {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(40));
 
-        // 🔹 Step 1: Open Yopmail
+        // Step 1: Open Yopmail
         driver.get("https://yopmail.com/");
+
         WebElement inbox = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//input[@placeholder='Enter your inbox here']")));
         inbox.sendKeys("naviatestingntp@yopmail.com");
 
         driver.findElement(By.xpath("//i[@class='material-icons-outlined f36']")).click();
 
-        // 🔹 Step 2: Wait for mail iframe
+        // Step 2: Switch to mail iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("ifmail"));
 
-        // 🔹 Step 3: Extract OTP
+        // Step 3: Wait and fetch OTP mail content
         WebElement mailBody = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//div[@id='mail']//pre")));
 
-        String text = mailBody.getText();
+        String mailText = mailBody.getText();
 
         Pattern otpPattern = Pattern.compile("\\b\\d{6}\\b");
-        Matcher matcher = otpPattern.matcher(text);
+        Matcher matcher = otpPattern.matcher(mailText);
 
         String otp = null;
+
         if (matcher.find()) {
             otp = matcher.group();
             System.out.println("Extracted OTP: " + otp);
@@ -49,12 +50,13 @@ public class Login_Page extends BaseClass {
             throw new RuntimeException("OTP not found in Yopmail");
         }
 
+        // Step 4: Switch back to main page
         driver.switchTo().defaultContent();
 
-        // 🔹 Step 4: Open Navia login
+        // Step 5: Open Navia login page
         driver.get("https://web.navia.co.in/login.php");
 
-        // 🔹 Step 5: Click login with client code
+        // Step 6: Click login with client code
         try {
             WebElement loginBtn = wait.until(ExpectedConditions.elementToBeClickable(
                     By.xpath("//button[contains(text(),'Login with client code')]")));
@@ -65,25 +67,27 @@ public class Login_Page extends BaseClass {
             loginBtnAlt.click();
         }
 
-        // 🔹 Step 6: Enter credentials
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("clientCode")))
-                .sendKeys("63748379");
+        // Step 7: Enter client code
+        WebElement clientCode = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.name("clientCode")));
+        clientCode.sendKeys("63748379");
 
-        driver.findElement(By.name("lPassword"))
-                .sendKeys("Navia@123");
+        // Step 8: Enter password
+        WebElement password = driver.findElement(By.name("lPassword"));
+        password.sendKeys("Navia@123");
 
-        // 🔹 Step 7: Request OTP
+        // Step 9: Request OTP
         driver.findElement(By.xpath("//input[@onclick='GetTOTP()']")).click();
 
-        // 🔹 Step 8: Enter OTP
+        // Step 10: Enter OTP
         WebElement otpBox = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.name("usertotp")));
         otpBox.sendKeys(otp);
 
-        // 🔹 Step 9: Final login
+        // Step 11: Click login
         driver.findElement(By.id("login_fsmt")).click();
 
-        // 🔹 Step 10: Handle optional risk disclosure
+        // Step 12: Handle optional risk disclosure popup
         try {
             WebElement agreeBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(
                     By.xpath("//span[text()='Agree']//parent::button")));
@@ -94,4 +98,3 @@ public class Login_Page extends BaseClass {
         }
     }
 }
-```
