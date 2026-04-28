@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Cucumber" time="213.502" tests="2" skipped="0" failures="0" errors="0">
+<testcase classname="Verify Mutual Fund Functionality" name="Login Navia" time="153.462">
+<system-out><![CDATA[
+Given User Navigate to Navia................................................passed
+When User Click login with client code......................................passed
+And User Enter Client Code..................................................passed
+And User  Enter Password....................................................passed
+And User Click Agree CheckBox...............................................passed
+And User Click Login button.................................................passed
+And User Click Otp Verification and enter manualy...........................passed
+And User Click Login Again..................................................passed
+]]></system-out>
+</testcase>
+<testcase classname="Verify Mutual Fund Functionality" name="User Check The Mutual Fund -  UPI Payment - functionality" time="59.798">
+<system-out><![CDATA[
+When Navigate to home page..................................................passed
+And User MouseOver Dashboard and Click Mutual Funds.........................passed
+And User Click Explore......................................................passed
+And User Search "Navi Flexi Cap Fund Direct Plan Growth" in Serach Box and enter.passed
+And User Click One Time , enter amount "100" and click pay now..............passed
+And User Click enter UPI ID "6374837965@ptsbi" and Click Pay Via UPI........passed
+]]></system-out>
+</testcase>
+</testsuite>
