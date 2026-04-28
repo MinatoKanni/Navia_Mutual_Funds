@@ -1,4 +1,3 @@
-java
 package com.baseclass;
 
 import java.io.File;
@@ -18,7 +17,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -27,7 +25,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class BaseClass {
 
     public static WebDriver driver;
-    public static Actions a;
     public static WebDriverWait wait;
 
     public static WebDriver launchBrowser(String browser) {
@@ -43,15 +40,11 @@ public class BaseClass {
                     || System.getenv("JENKINS_URL") != null;
 
             if (isCI) {
-                System.out.println("[INFO] CI/Jenkins detected - HEADLESS mode");
+                System.out.println("Running in Jenkins - Headless Mode");
                 options.addArguments("--headless=new");
                 options.addArguments("--no-sandbox");
                 options.addArguments("--disable-dev-shm-usage");
-                options.addArguments("--disable-gpu");
                 options.addArguments("--window-size=1920,1080");
-                options.addArguments("--remote-allow-origins=*");
-            } else {
-                System.out.println("[INFO] Local detected - HEADED mode");
             }
 
             options.addArguments("--disable-notifications");
@@ -59,7 +52,6 @@ public class BaseClass {
             driver = new ChromeDriver(options);
             wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-            // Maximize only in local
             if (!isCI) {
                 driver.manage().window().maximize();
             }
@@ -75,13 +67,8 @@ public class BaseClass {
     }
 
     public static void clickOnElement(WebElement element) {
-        try {
-            scrollToElement(element);
-            wait.until(ExpectedConditions.elementToBeClickable(element)).click();
-        } catch (Exception e) {
-            System.out.println("[WARN] Normal click failed, trying JS click...");
-            clickWithJS(element);
-        }
+        scrollToElement(element);
+        wait.until(ExpectedConditions.elementToBeClickable(element)).click();
     }
 
     public static void sendValues(WebElement element, String value) {
@@ -91,12 +78,7 @@ public class BaseClass {
     }
 
     public static void scrollToElement(WebElement element) {
-        ((JavascriptExecutor) driver).executeScript(
-                "arguments[0].scrollIntoView({block:'center'});", element);
-    }
-
-    public static void clickWithJS(WebElement element) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
     }
 
     public static void quitBrowser() {
@@ -111,39 +93,21 @@ public class BaseClass {
             File src = ts.getScreenshotAs(OutputType.FILE);
 
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(new Date());
-            String safeName = name.replaceAll("[^a-zA-Z0-9_\\-]", "_");
-
-            File dest = new File("target/screenshots/" + safeName + "_" + timestamp + ".png");
+            File dest = new File("target/screenshots/" + name + "_" + timestamp + ".png");
 
             Files.createDirectories(dest.getParentFile().toPath());
             Files.copy(src.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-            System.out.println("[SCREENSHOT] Saved: " + dest.getPath());
-
         } catch (IOException e) {
-            System.err.println("[ERROR] Screenshot failed: " + name);
             e.printStackTrace();
         }
     }
 
-    public static void framesHandling() {
-        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(
-                By.xpath("//iframe[@class='iframe_window']")));
-
-        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(
-                By.xpath("//iframe[@title='Financial Chart']")));
-    }
-
-    public static void outOfFrames() {
-        driver.switchTo().defaultContent();
-    }
-
     public static void sleep(long seconds) throws InterruptedException {
-        Thread.sleep(seconds * 1000); // FIXED
+        Thread.sleep(seconds * 1000);
     }
 
     public static void setImplicitWait(long seconds) {
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }
 }
-
