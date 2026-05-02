@@ -1,6 +1,4 @@
 com\runner\Runner.class
-com\stepdefinition\Demo.class
-com\stepdefinition\CommonSteps.class
+com\stepdefinition\MutualFund.class
+com\stepdefinition\Login_Page.class
 com\stepdefinition\ScreenShort.class
-com\stepdefinition\Chart.class
-com\stepdefinition\Login.class

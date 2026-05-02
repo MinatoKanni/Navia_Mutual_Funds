@@ -1,25 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="Cucumber" time="213.502" tests="2" skipped="0" failures="0" errors="0">
-<testcase classname="Verify Mutual Fund Functionality" name="Login Navia" time="153.462">
+<testsuite name="Cucumber" time="30.37" tests="2" skipped="0" failures="2" errors="0">
+<testcase classname="Verify Mutual Fund Functionality" name="Login Navia" time="29.895">
+<failure type="org.openqa.selenium.NoSuchSessionException" message="invalid session id
+Build info: version: '4.14.1', revision: '03f8ede370'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [98a1700cd128a9a67a64eb62e191256a, screenshot {}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.103, chrome: {chromedriverVersion: 147.0.7727.117 (474cc805edd..., userDataDir: C:\Users\PraveenV\AppData\L...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:49724}, goog:processID: 28976, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:49724/devtoo..., se:cdpVersion: 147.0.7727.103, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 98a1700cd128a9a67a64eb62e191256a">
+<![CDATA[org.openqa.selenium.NoSuchSessionException: invalid session id
+Build info: version: '4.14.1', revision: '03f8ede370'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [98a1700cd128a9a67a64eb62e191256a, screenshot {}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.103, chrome: {chromedriverVersion: 147.0.7727.117 (474cc805edd..., userDataDir: C:\Users\PraveenV\AppData\L...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:49724}, goog:processID: 28976, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:49724/devtoo..., se:cdpVersion: 147.0.7727.103, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 98a1700cd128a9a67a64eb62e191256a
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
+	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:200)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:175)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:675)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:679)
+	at org.openqa.selenium.remote.RemoteWebDriver.getScreenshotAs(RemoteWebDriver.java:325)
+	at com.baseclass.BaseClass.takeScreenshot(BaseClass.java:95)
+	at com.stepdefinition.ScreenShort.afterTest(ScreenShort.java:36)
+]]>
+</failure>
 <system-out><![CDATA[
 Given User Navigate to Navia................................................passed
-When User Click login with client code......................................passed
-And User Enter Client Code..................................................passed
-And User  Enter Password....................................................passed
-And User Click Agree CheckBox...............................................passed
-And User Click Login button.................................................passed
-And User Click Otp Verification and enter manualy...........................passed
-And User Click Login Again..................................................passed
 ]]></system-out>
 </testcase>
-<testcase classname="Verify Mutual Fund Functionality" name="User Check The Mutual Fund -  UPI Payment - functionality" time="59.798">
+<testcase classname="Verify Mutual Fund Functionality" name="User Check The Mutual Fund -  UPI Payment - functionality" time="0.012">
+<failure type="org.openqa.selenium.NoSuchSessionException" message="invalid session id
+Build info: version: '4.14.1', revision: '03f8ede370'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [98a1700cd128a9a67a64eb62e191256a, get {url=https://web.navia.co.in/index.php}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.103, chrome: {chromedriverVersion: 147.0.7727.117 (474cc805edd..., userDataDir: C:\Users\PraveenV\AppData\L...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:49724}, goog:processID: 28976, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:49724/devtoo..., se:cdpVersion: 147.0.7727.103, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 98a1700cd128a9a67a64eb62e191256a">
+<![CDATA[org.openqa.selenium.NoSuchSessionException: invalid session id
+Build info: version: '4.14.1', revision: '03f8ede370'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [98a1700cd128a9a67a64eb62e191256a, get {url=https://web.navia.co.in/index.php}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.103, chrome: {chromedriverVersion: 147.0.7727.117 (474cc805edd..., userDataDir: C:\Users\PraveenV\AppData\L...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:49724}, goog:processID: 28976, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:49724/devtoo..., se:cdpVersion: 147.0.7727.103, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 98a1700cd128a9a67a64eb62e191256a
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
+	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:200)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:175)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+	at org.openqa.selenium.remote.RemoteWebDriver.get(RemoteWebDriver.java:304)
+	at com.stepdefinition.ScreenShort.navigate_to_home_page(ScreenShort.java:73)
+	at ✽.Navigate to home page(file:///D:/GitHub/Navia_Mutual_Funds/src/test/java/com/feature/Mutual_Fund.feature:8)
+]]>
+</failure>
 <system-out><![CDATA[
-When Navigate to home page..................................................passed
-And User MouseOver Dashboard and Click Mutual Funds.........................passed
-And User Click Explore......................................................passed
-And User Search "Navi Flexi Cap Fund Direct Plan Growth" in Serach Box and enter.passed
-And User Click One Time , enter amount "100" and click pay now..............passed
-And User Click enter UPI ID "6374837965@ptsbi" and Click Pay Via UPI........passed
+When Navigate to home page..................................................failed
+And User MouseOver Dashboard and Click Mutual Funds.........................skipped
+And User Click Explore......................................................skipped
+And User Search "Navi Flexi Cap Fund Direct Plan Growth" in Serach Box and enter.skipped
+And User Click One Time , enter amount "100" and click pay now..............skipped
+And User Click enter UPI ID "6374837965@ptsbi" and Click Pay Via UPI........skipped
 ]]></system-out>
 </testcase>
 </testsuite>
