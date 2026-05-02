@@ -135,9 +135,12 @@ public class MutualFund extends BaseClass {
         WebElement amt = wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//input[@data-dhx-id='ot_amt']")));
         js.executeScript("arguments[0].scrollIntoView({block:'center'});", amt);
-        Thread.sleep(300);
-        amt.click();
         Thread.sleep(500);
+        // FIX: ElementNotInteractableException on native click — use JS click
+        // then sendKeys via JS to bypass any overlay covering the input
+        js.executeScript("arguments[0].click();", amt);
+        Thread.sleep(500);
+        js.executeScript("arguments[0].value='';", amt);
         amt.sendKeys(string);
         Thread.sleep(2000);
 
