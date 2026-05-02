@@ -41,10 +41,10 @@ public class Login_Page extends BaseClass {
         // STEP 3: Enter credentials
         WebElement clientCode = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.name("clientCode")));
-        clientCode.sendKeys("63748379");
+        clientCode.sendKeys("82486527");
 
         WebElement password = driver.findElement(By.name("lPassword"));
-        password.sendKeys("Navia@123");
+        password.sendKeys("Mynavia@123");
 
         // STEP 4: Request OTP — this triggers the email to YopMail
         driver.findElement(By.xpath("//input[@onclick='GetTOTP()']")).click();
