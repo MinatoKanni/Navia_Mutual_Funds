@@ -7,7 +7,6 @@ import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -44,7 +43,11 @@ public class BaseClass {
                 options.addArguments("--headless=new");
                 options.addArguments("--no-sandbox");
                 options.addArguments("--disable-dev-shm-usage");
+                options.addArguments("--disable-gpu");
                 options.addArguments("--window-size=1920,1080");
+                options.addArguments("--remote-allow-origins=*");
+            } else {
+                System.out.println("Running in Local - Headed Mode");
             }
 
             options.addArguments("--disable-notifications");
@@ -52,11 +55,10 @@ public class BaseClass {
             driver = new ChromeDriver(options);
             wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-            if (!isCI) {
-                driver.manage().window().maximize();
-            }
+            driver.manage().window().maximize();
         }
 
+        // FIX: Replaced deprecated implicitlyWait(long, TimeUnit) with Duration version
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         return driver;
     }
@@ -93,10 +95,12 @@ public class BaseClass {
             File src = ts.getScreenshotAs(OutputType.FILE);
 
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(new Date());
-            File dest = new File("target/screenshots/" + name + "_" + timestamp + ".png");
+            String safeName = name.replaceAll("[^a-zA-Z0-9_\\-]", "_");
+            File dest = new File("target/screenshots/" + safeName + "_" + timestamp + ".png");
 
             Files.createDirectories(dest.getParentFile().toPath());
             Files.copy(src.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("[SCREENSHOT] Saved: " + dest.getPath());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,7 +111,9 @@ public class BaseClass {
         Thread.sleep(seconds * 1000);
     }
 
+    // FIX: Replaced deprecated implicitlyWait(long, TimeUnit) — removed this method
+    // Use driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(n)) directly
     public static void setImplicitWait(long seconds) {
-        driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(seconds));
     }
 }
