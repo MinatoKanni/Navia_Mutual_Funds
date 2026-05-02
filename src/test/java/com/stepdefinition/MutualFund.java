@@ -34,8 +34,6 @@ public class MutualFund extends BaseClass {
         Thread.sleep(2000);
     }
 
-    // FIX: Removed Robot class — uses OS-level keyboard, fails headless (no display)
-    // Replaced with Selenium Keys.ENTER which works in all environments
     @When("User click Explore and Search {string}")
     public void user_click_explore_and_search(String string) throws InterruptedException {
         Thread.sleep(2000);
@@ -58,7 +56,7 @@ public class MutualFund extends BaseClass {
         searchInput.sendKeys(string);
         Thread.sleep(2000);
 
-        // FIX: Robot.keyPress replaced with Selenium sendKeys
+        // Robot replaced with Selenium Keys — works in headless mode
         searchInput.sendKeys(Keys.ENTER);
         Thread.sleep(1000);
     }
@@ -84,30 +82,56 @@ public class MutualFund extends BaseClass {
     public void user_search_in_serach_box_and_enter(String string) throws InterruptedException {
         Thread.sleep(1000);
 
-        driver.findElement(By.xpath("//input[@placeholder='Search']")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        // Type the search text
+        WebElement searchBox = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//input[@placeholder='Search']")));
+        searchBox.click();
         Thread.sleep(1000);
-        driver.findElement(By.xpath("//input[@placeholder='Search']")).sendKeys(string);
+        searchBox.sendKeys(string);
         Thread.sleep(2000);
-        driver.findElement(By.xpath("//span[text()='" + string + "']//parent::div")).click();
+
+        // FIX: ElementClickInterceptedException — the iframe_window overlay sits on top
+        // of the search result at point (206,128), blocking a normal click.
+        // scrollIntoView centres the result away from the toolbar overlay,
+        // then JS click bypasses the interception entirely.
+        WebElement result = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//span[text()='" + string + "']//parent::div")));
+        js.executeScript("arguments[0].scrollIntoView({block:'center'});", result);
+        Thread.sleep(500);
+        js.executeScript("arguments[0].click();", result);
         Thread.sleep(1000);
     }
 
     @When("User Click One Time , enter amount {string} and click pay now")
     public void user_click_one_time_enter_amount_and_click_pay_now(String string)
             throws InterruptedException {
+        Thread.sleep(2000);
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        // JS click handles both ElementNotInteractableException and
+        // ElementClickInterceptedException in headless mode
+        WebElement oneTime = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//span[text()='One-Time']")));
+        js.executeScript("arguments[0].scrollIntoView({block:'center'});", oneTime);
+        Thread.sleep(500);
+        js.executeScript("arguments[0].click();", oneTime);
         Thread.sleep(1000);
 
-        driver.findElement(By.xpath("//span[text()='One-Time']")).click();
-        Thread.sleep(1000);
-
-        WebElement amt = driver.findElement(By.xpath("//input[@data-dhx-id='ot_amt']"));
-        Thread.sleep(1000);
+        WebElement amt = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//input[@data-dhx-id='ot_amt']")));
         amt.click();
-        Thread.sleep(1000);
+        Thread.sleep(500);
         amt.sendKeys(string);
         Thread.sleep(2000);
 
-        driver.findElement(By.xpath("//span[text()='Pay Now']//parent::button")).click();
+        WebElement payNow = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//span[text()='Pay Now']//parent::button")));
+        js.executeScript("arguments[0].click();", payNow);
         Thread.sleep(1000);
     }
 
