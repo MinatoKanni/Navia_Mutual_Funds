@@ -138,11 +138,11 @@ public class Login_Page extends BaseClass {
         WebElement clientCode2 = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.name("clientCode")));
         clientCode2.clear();
-        clientCode2.sendKeys("63748379");
+        clientCode2.sendKeys("82486527");
 
         WebElement password2 = driver.findElement(By.name("lPassword"));
         password2.clear();
-        password2.sendKeys("Navia@123");
+        password2.sendKeys("Mynavia@123");
 
         // STEP 9: Enter OTP
         WebElement otpBox = wait.until(ExpectedConditions.visibilityOfElementLocated(
