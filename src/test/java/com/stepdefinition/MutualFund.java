@@ -113,8 +113,18 @@ public class MutualFund extends BaseClass {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
-        // JS click handles both ElementNotInteractableException and
-        // ElementClickInterceptedException in headless mode
+        // FIX: After user_search_in_serach_box_and_enter() JS-clicks the fund result,
+        // the driver context returns to default content. The fund detail page
+        // (with One-Time / ot_amt) renders inside the iframe_window, so we must
+        // switch back into it before trying to interact with any elements here.
+        try {
+            WebElement iframe = wait.until(ExpectedConditions.presenceOfElementLocated(
+                    By.xpath("//iframe[@class='iframe_window']")));
+            driver.switchTo().frame(iframe);
+        } catch (Exception e) {
+            // Already inside the iframe — proceed
+        }
+
         WebElement oneTime = wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//span[text()='One-Time']")));
         js.executeScript("arguments[0].scrollIntoView({block:'center'});", oneTime);
@@ -122,8 +132,10 @@ public class MutualFund extends BaseClass {
         js.executeScript("arguments[0].click();", oneTime);
         Thread.sleep(1000);
 
-        WebElement amt = wait.until(ExpectedConditions.elementToBeClickable(
+        WebElement amt = wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//input[@data-dhx-id='ot_amt']")));
+        js.executeScript("arguments[0].scrollIntoView({block:'center'});", amt);
+        Thread.sleep(300);
         amt.click();
         Thread.sleep(500);
         amt.sendKeys(string);
